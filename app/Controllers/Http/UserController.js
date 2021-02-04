@@ -34,6 +34,15 @@ class UserController {
       throw error;
     }
   }
+
+  async logout({ auth, response }) {
+    try {
+      await auth.logout();
+      return response.json({ message: "User logged out." });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = UserController;

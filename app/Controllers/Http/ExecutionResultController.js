@@ -3,6 +3,7 @@
 const CustomException = use("App/Exceptions/CustomException");
 const ExecutionResult = use("App/Models/ExecutionResult");
 const Execution = use("App/Models/Execution");
+const TestCase = use("App/Models/TestCase");
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -23,11 +24,15 @@ class ExecutionResultController {
    */
   async index({ response, params }) {
     try {
+      let info = await Execution.findByOrFail({
+        id: params.execution_id,
+      });
       let data = await ExecutionResult.query()
         .with("test_case")
         .where({ execution_id: params.execution_id })
         .fetch();
-      response.json(data);
+      info.test_cases = data;
+      response.json(info);
     } catch (error) {
       throw error;
     }
@@ -88,6 +93,7 @@ class ExecutionResultController {
     try {
       let reqData = ExecutionResult._params(request);
       let row = await ExecutionResult.findByOrFail("id", params.id);
+      let testCase = await TestCase.findByOrFail({ id: row.test_case_id });
       let operation = row.status + "-" + reqData.status;
       if (reqData.status !== "passed" && !reqData.actual_results) {
         throw new CustomException("Actual Results are missing.", 400);
@@ -155,8 +161,8 @@ class ExecutionResultController {
       }
       await row.save();
       row.execution = execution;
+      row.test_case = testCase;
       response.json(row);
-      console.log(JSON.stringify(row));
       await execution.save();
     } catch (error) {
       throw error;

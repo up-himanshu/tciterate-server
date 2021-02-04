@@ -21,7 +21,7 @@ class ExecutionController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ response }) {
+  async index({ response, params }) {
     try {
       let list = await Execution.query()
         .where({ project_id: params.project_id })

@@ -81,6 +81,12 @@ class ExecutionResultController {
    */
   async edit({ params, request, response, view }) {}
 
+  requireActualResult(status) {
+    if (status == "passed" || status == "unexecuted") {
+      return false;
+    } else return true;
+  }
+
   /**
    * Update executionresult details.
    * PUT or PATCH executionresults/:id
@@ -95,7 +101,7 @@ class ExecutionResultController {
       let row = await ExecutionResult.findByOrFail("id", params.id);
       let testCase = await TestCase.findByOrFail({ id: row.test_case_id });
       let operation = row.status + "-" + reqData.status;
-      if (reqData.status !== "passed" && !reqData.actual_results) {
+      if (this.requireActualResult(reqData.status) && !reqData.actual_results) {
         throw new CustomException("Actual Results are missing.", 400);
       }
       row.user_id = auth.user.id;

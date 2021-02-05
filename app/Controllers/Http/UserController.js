@@ -37,7 +37,7 @@ class UserController {
 
   async logout({ auth, response }) {
     try {
-      await auth.logout();
+      await auth.authenticator("api").revokeTokens();
       return response.json({ message: "User logged out." });
     } catch (error) {
       throw error;

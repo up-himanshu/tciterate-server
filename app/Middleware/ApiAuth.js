@@ -1,6 +1,7 @@
 "use strict";
 
 const User = use("App/Models/User");
+const CustomException = use("App/Exceptions/CustomException");
 
 class ApiAuth {
   async handle({ request, auth }, next) {
@@ -20,7 +21,7 @@ class ApiAuth {
       await next();
     } else {
       console.log("Unauthorized");
-      throw new Error("Unauthorized");
+      throw new CustomException("Unauthorized", 401);
     }
   }
 }

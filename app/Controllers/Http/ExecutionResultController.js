@@ -103,6 +103,8 @@ class ExecutionResultController {
       row.actual_results =
         reqData.status == "passed"
           ? "Same as expected."
+          : reqData.status == "unexecuted"
+          ? null
           : reqData.actual_results;
       let execution = await Execution.findByOrFail({ id: row.execution_id });
       console.log("operation", operation);

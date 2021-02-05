@@ -58,4 +58,5 @@ Route.group(() => {
   .middleware(["APIAuth"])
   .prefix(PREFIX);
 
-Route.on("/").render("welcome");
+// Route.on("/").render("welcome");
+Route.on("*").render("index");

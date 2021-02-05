@@ -51,6 +51,9 @@ Route.group(() => {
     "ExecutionResultController.index"
   );
   Route.put("executionresults/:id", "ExecutionResultController.update");
+
+  //Stats
+  Route.get("stats", "StatController.index");
 })
   .middleware(["APIAuth"])
   .prefix(PREFIX);

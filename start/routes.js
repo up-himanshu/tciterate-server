@@ -29,7 +29,8 @@ Route.group(() => {
   //Users
   Route.get("users", "UserController.index");
   Route.post("users", "UserController.create");
-  Route.delete("users", "UserController.logout");
+  Route.put("users/profile", "UserController.update");
+  Route.delete("users/logout", "UserController.logout");
 
   //Projects
   Route.get("projects", "ProjectController.index");

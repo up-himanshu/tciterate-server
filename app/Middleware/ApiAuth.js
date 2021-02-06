@@ -6,7 +6,8 @@ const CustomException = use("App/Exceptions/CustomException");
 class ApiAuth {
   async handle({ request, auth }, next) {
     let { email, password } = request.all();
-    if (request.url() == "/api/v1/users/login" && !!email && !!password) {
+    let requestUrl = request.url();
+    if (requestUrl == "/api/v1/users/login" && !!email && !!password) {
       let token = await auth.attempt(email, password);
       if (!!token) {
         let user = await User.findBy({ email });
@@ -18,6 +19,8 @@ class ApiAuth {
       }
     } else if (!!auth.user) {
       console.log("auth.user");
+      await next();
+    } else if (requestUrl == "/api/v1/users/logout") {
       await next();
     } else {
       console.log("Unauthorized");

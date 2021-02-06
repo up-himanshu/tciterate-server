@@ -35,13 +35,26 @@ class UserController {
     }
   }
 
-  async logout({ auth, response }) {
+  async update({ request, response, auth }) {
+    console.log("update profile request received");
     try {
-      await auth.authenticator("api").revokeTokens();
-      return response.json({ message: "User logged out." });
+      let reqData = User._params(request);
+      let row = await User.findByOrFail("id", auth.user.id);
+      if (reqData.password) {
+        console.log("changing password");
+        row.password = reqData.password;
+        row.save();
+      }
+      console.log("responding");
+      response.json(row);
     } catch (error) {
       throw error;
     }
+  }
+
+  async logout({ auth, response }) {
+    await auth.authenticator("api").revokeTokens();
+    return response.json({ message: "User logged out." });
   }
 }
 

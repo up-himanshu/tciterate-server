@@ -116,7 +116,7 @@ class TestCaseController {
   async destroy({ params, request, response }) {
     try {
       let row = await TestCase.findByOrFail("id", params.id);
-      row.delete();
+      await row.delete();
       response.json({ message: "Success" });
     } catch (error) {
       throw error;

@@ -20,11 +20,13 @@ class ExceptionHandler extends BaseExceptionHandler {
           errorStatus: 422,
           errorMessage: "Cannot change or delete as there are dependant items.",
         });
+
       case "E_MISSING_DATABASE_ROW":
         return response.status(422).send({
           errorStatus: 422,
           errorMessage: "Resource being changed or deleted.",
         });
+
       case "ER_DUP_ENTRY":
         return response.status(422).send({
           errorStatus: 422,
@@ -45,6 +47,13 @@ class ExceptionHandler extends BaseExceptionHandler {
           errorStatus: error.status,
           errorMessage: error.sqlMessage || error.message,
         });
+
+      case "E_PASSWORD_MISMATCH":
+        return response.status(error.status).send({
+          // errorStatus: error.status,
+          // errorMessage: error.sqlMessage || error.message,
+        });
+
       case "ER_NO_REFERENCED_ROW_2":
         console.log(
           "Himanshu",

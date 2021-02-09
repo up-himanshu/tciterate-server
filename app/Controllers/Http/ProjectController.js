@@ -1,6 +1,8 @@
 "use strict";
 
 const Project = use("App/Models/Project");
+const TestCase = use("App/Models/TestCase");
+const Execution = use("App/Models/Project");
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -21,7 +23,10 @@ class ProjectController {
    */
   async index({ response }) {
     try {
-      let list = await Project.query().with("executions").fetch();
+      let list = await Project.query()
+        .with("executions")
+        .with("test_cases")
+        .fetch();
       response.json(list);
     } catch (error) {
       throw error;

@@ -11,6 +11,10 @@ class Project extends Model {
   executions() {
     return this.hasMany("App/Models/Execution");
   }
+
+  test_cases() {
+    return this.hasMany("App/Models/TestCase");
+  }
 }
 
 module.exports = Project;

@@ -35,6 +35,18 @@ class User extends Model {
     return this.hasMany("App/Models/Token");
   }
 
+  test_cases() {
+    return this.hasMany("App/Models/TestCase");
+  }
+
+  executions() {
+    return this.hasMany("App/Models/Execution");
+  }
+
+  execution_results() {
+    return this.hasMany("App/Models/ExecutionResult");
+  }
+
   static get hidden() {
     return ["password"];
   }

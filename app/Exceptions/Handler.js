@@ -7,7 +7,7 @@ const BaseExceptionHandler = use("BaseExceptionHandler");
 
 class ExceptionHandler extends BaseExceptionHandler {
   async handle(error, { response }) {
-    console.log(error);
+    console.log(error.code);
     switch (error.code) {
       case "ER_NO_DEFAULT_FOR_FIELD":
         return response.status(422).send({
@@ -45,13 +45,13 @@ class ExceptionHandler extends BaseExceptionHandler {
       case "E_USER_NOT_FOUND":
         return response.status(error.status).send({
           errorStatus: error.status,
-          errorMessage: error.sqlMessage || error.message,
+          errorMessage: error.sqlMessage || error.message.split(": ")[1],
         });
 
       case "E_PASSWORD_MISMATCH":
-        return response.status(error.status).send({
-          // errorStatus: error.status,
-          // errorMessage: error.sqlMessage || error.message,
+        return response.status(401).send({
+          errorStatus: 401,
+          errorMessage: error.message.split(": ")[1],
         });
 
       case "ER_NO_REFERENCED_ROW_2":

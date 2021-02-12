@@ -24,8 +24,8 @@ class ProjectController {
   async index({ response }) {
     try {
       let list = await Project.query()
-        .with("executions")
-        .with("test_cases")
+        .withCount("executions")
+        .withCount("test_cases")
         .fetch();
       response.json(list);
     } catch (error) {

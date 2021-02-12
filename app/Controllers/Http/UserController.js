@@ -5,7 +5,11 @@ const User = use("App/Models/User");
 
 class UserController {
   async index({ response }) {
-    let users = await User.all();
+    let users = await User.query()
+      .withCount("test_cases")
+      .withCount("executions")
+      .withCount("execution_results")
+      .fetch();
     response.json(users);
   }
 

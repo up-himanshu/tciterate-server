@@ -36,11 +36,11 @@ class StatController {
     // let userDevices = await Database.table(
     //   "user_devices"
     // ).whereBetween("created_at", [startDate, endDate]);
-    let ordersData = this._orderStats(projects);
+    let projectData = this._projectStats(projects);
     // let salesData = this._salesStats(projects);
     let userStats = this._userStats(users);
-    let drinkStats = this._orderStats(testCases);
-    let executionStats = this._orderStats(executions);
+    let drinkStats = this._projectStats(testCases);
+    let executionStats = this._projectStats(executions);
     // let drinkStats = this._drinkStats(savedDrinks);
     // let deviceStats = this._deviceStats(userDevices);
     // let redemptionStats = this._redemptionStats(redemptions);
@@ -50,9 +50,9 @@ class StatController {
       smallStats: [
         {
           label: "Total Projects",
-          value: ordersData.totalOrders,
-          percentage: ordersData.orderPercentDiff + "%",
-          increase: ordersData.orderIncrease,
+          value: projectData.totalOrders,
+          percentage: projectData.orderPercentDiff + "%",
+          increase: projectData.orderIncrease,
           chartLabels: [null, null, null, null, null, null, null],
           attrs: { md: "6", sm: "6" },
           datasets: [
@@ -62,7 +62,7 @@ class StatController {
               borderWidth: 1.5,
               backgroundColor: "rgba(0, 184, 216, 0.1)",
               borderColor: "rgb(0, 184, 216)",
-              data: ordersData.orderCountPerDay,
+              data: projectData.orderCountPerDay,
             },
           ],
         },
@@ -180,7 +180,7 @@ class StatController {
     return { percentDiff, increase, lastSevenDayData, countPerDay };
   }
 
-  _orderStats(orders) {
+  _projectStats(orders) {
     let seventhDay = new Date(this._nthDay(7));
     let fourteenthDay = new Date(this._nthDay(14));
     let lastSevenDayData = orders.filter((or7) => {
@@ -200,7 +200,8 @@ class StatController {
     let orderIncrease =
       lastSevenDayData.length < previousSevenDayData.length ? false : true;
     // var orderIds = lastSevenDayData.map(d => d.id);
-    const totalOrders = lastSevenDayData.length;
+    // const totalOrders = lastSevenDayData.length;
+    const totalOrders = orders.length;
     return {
       totalOrders,
       orderPercentDiff,

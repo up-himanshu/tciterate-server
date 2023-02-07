@@ -19,10 +19,13 @@ class TestCaseController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ request, response, params }) {
+  async index({ request, response, params, auth}) {
     try {
       let list = await TestCase.query()
-        .where({ project_id: params.project_id })
+        .where({ 
+          project_id: params.project_id,
+          business_id: auth.user.business_id 
+        })
         .fetch();
       response.json(list);
     } catch (error) {
@@ -43,9 +46,10 @@ class TestCaseController {
     let reqData = TestCase._params(request);
     reqData.project_id = params.project_id;
     reqData.user_id = auth.user.id;
+    reqData.user_id = auth.user.business_id ;
     try {
       let resObj = await TestCase.create(reqData);
-      response.status(201).json(resObj);
+      response.status(200).json(resObj);
     } catch (error) {
       throw error;
     }

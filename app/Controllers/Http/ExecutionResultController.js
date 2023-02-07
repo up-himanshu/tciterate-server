@@ -22,14 +22,17 @@ class ExecutionResultController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ response, params }) {
+  async index({ response, params, auth}) {
     try {
       let info = await Execution.findByOrFail({
         id: params.execution_id,
       });
       let data = await ExecutionResult.query()
         .with("test_case")
-        .where({ execution_id: params.execution_id })
+        .where({
+          execution_id: params.execution_id,
+          business_id: auth.user.business_id
+        })
         .fetch();
       info.test_cases = data;
       response.json(info);

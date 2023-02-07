@@ -1,65 +1,49 @@
 "use strict";
 
-const Project = use("App/Models/Project");
-const TestCase = use("App/Models/TestCase");
-const Execution = use("App/Models/Project");
+const Business = require('../../Models/Business');
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 /**
- * Resourceful controller for interacting with projects
+ * Resourceful controller for interacting with executionresults
  */
-class ProjectController {
+class BusinessController {
   /**
-   * Show a list of all projects.
-   * GET projects
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ response, auth}) {
+  async index({ response, params, auth}) {
     try {
-      console.log("hello");
-      let list = await Project.query()
-        .where({ business_id: auth.user.business_id })
-        .withCount("executions")
-        .withCount("test_cases")
-        .fetch();
-        console.log(list);
-      response.json(list);
     } catch (error) {
       throw error;
     }
   }
 
   /**
-   * Render a form to be used for creating a new project.
-   * GET projects/create
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create({ request, response, auth }) {
-    let reqData = Project._params(request);
+  async create({ request, response, view }) {
     try {
-      reqData.user_id = auth.user.id;
-      reqData.business_id = auth.user.business_id;
-      let resObj = await Project.create(reqData);
-      response.json(resObj);
+        let reqData = Business._params(request);
+        let business = await Project.create(reqData);0
+        //need to create a admin user from here send business id too
+        //then 
+        response.json(resObj);
     } catch (error) {
-      throw error;
+        
     }
   }
 
   /**
-   * Create/save a new project.
-   * POST projects
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -68,9 +52,6 @@ class ProjectController {
   async store({ request, response }) {}
 
   /**
-   * Display a single project.
-   * GET projects/:id
-   *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
@@ -79,8 +60,8 @@ class ProjectController {
   async show({ params, request, response, view }) {}
 
   /**
-   * Render a form to update an existing project.
-   * GET projects/:id/edit
+   * Render a form to update an existing executionresult.
+   * GET executionresults/:id/edit
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -90,19 +71,19 @@ class ProjectController {
   async edit({ params, request, response, view }) {}
 
   /**
-   * Update project details.
-   * PUT or PATCH projects/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {}
+  async update({ params, request, response, auth }) {
+    try {
+    } catch (error) {
+      throw error;
+    }
+  }
 
   /**
-   * Delete a project with id.
-   * DELETE projects/:id
-   *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
@@ -110,4 +91,4 @@ class ProjectController {
   async destroy({ params, request, response }) {}
 }
 
-module.exports = ProjectController;
+module.exports = BusinessController;

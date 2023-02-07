@@ -4,8 +4,9 @@ const CustomException = use("App/Exceptions/CustomException");
 const User = use("App/Models/User");
 
 class UserController {
-  async index({ response }) {
+  async index({ response, auth }) {
     let users = await User.query()
+      .where({ business_id: auth.user.business_id })
       .withCount("test_cases")
       .withCount("executions")
       .withCount("execution_results")
@@ -29,8 +30,9 @@ class UserController {
     }
   }
 
-  async create({ request, response }) {
+  async create({ request, response, auth}) {
     let reqData = User._params(request);
+    reqData.business_id = auth.user.business_id;
     try {
       let resObj = await User.create(reqData);
       response.status(201).json(resObj);

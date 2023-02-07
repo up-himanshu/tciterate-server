@@ -20,8 +20,9 @@ const PREFIX = "api/v1";
 
 Route.group(() => {
   Route.post("users/login", "UserController.login");
+  Route.post("businesses", "BusinessController.create");
   Route.get("ping", ({ response }) => {
-    response.json({ message: 20201229 });
+    response.json({ message: new Date().toISOString() });
   });
 }).prefix(PREFIX);
 

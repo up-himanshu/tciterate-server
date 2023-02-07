@@ -1,10 +1,10 @@
 "use strict";
 
-const User = use("App/Models/User");
+const Business = use("App/Models/Business");
 
 /*
 |--------------------------------------------------------------------------
-| UserSeeder
+| BusinessSeeder
 |--------------------------------------------------------------------------
 |
 | Make use of the Factory instance to seed database with dummy data or
@@ -15,14 +15,14 @@ const User = use("App/Models/User");
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use("Factory");
 
-class UserSeeder {
+class BusinessSeeder {
   async run() {
-    await User.create({
-      email: "up.himanshu@gmail.com",
-      business_id:1,
-      password: "pppppppp",
+    await Business.create({
+      display_name: "Test Business",
+      slug: "test-business",
+			country: "India"
     });
   }
 }
 
-module.exports = UserSeeder;
+module.exports = BusinessSeeder;

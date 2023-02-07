@@ -4,7 +4,8 @@ const Database = use("Database");
 const date = new Date();
 
 class StatController {
-  async index({ response }) {
+  async index({ response , auth}) {
+    console.log("hello");
     let startDate = new Date(
       date.getFullYear(),
       date.getMonth() - 1,
@@ -15,20 +16,24 @@ class StatController {
       date.getMonth() + 1,
       0
     ).toISOString();
-    let projects = await Database.table("projects").whereBetween("created_at", [
-      startDate,
-      endDate,
-    ]);
-    let users = await Database.table("users").whereBetween("created_at", [
-      startDate,
-      endDate,
-    ]);
-    let executions = await Database.table(
-      "executions"
-    ).whereBetween("created_at", [startDate, endDate]);
-    let testCases = await Database.table(
-      "test_cases"
-    ).whereBetween("created_at", [startDate, endDate]);
+    let projects = await Database.table("projects")
+      .where({ business_id: auth.user.business_id })
+      .whereBetween("created_at", [
+        startDate,
+        endDate,
+     ]);
+    let users = await Database.table("users")
+      .where({ business_id: auth.user.business_id })
+      .whereBetween("created_at", [
+        startDate,
+        endDate,
+      ]);
+    let executions = await Database.table("executions")
+      .where({ business_id: auth.user.business_id })
+      .whereBetween("created_at", [startDate, endDate]);
+    let testCases = await Database.table("test_cases")
+      .where({ business_id: auth.user.business_id })
+      .whereBetween("created_at", [startDate, endDate]);
     // let savedDrinks = await Database.table(
     //   "saved_drinks"
     // ).whereBetween("created_at", [startDate, endDate]);

@@ -21,10 +21,13 @@ class ExecutionController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ response, params }) {
+  async index({ response, params, auth}) {
     try {
       let list = await Execution.query()
-        .where({ project_id: params.project_id })
+        .where({
+          project_id: params.project_id,
+          business_id: auth.user.business_id
+        })
         .fetch();
       response.json(list);
     } catch (error) {
@@ -46,8 +49,12 @@ class ExecutionController {
       let reqData = Execution._params(request);
       reqData.project_id = params.project_id;
       reqData.user_id = auth.user.id;
+      reqData.business_id = auth.user.business_id;
       let totalTCCount = await TestCase.query()
-        .where({ project_id: params.project_id })
+        .where({ 
+          project_id: params.project_id,
+          business_id: auth.user.business_id
+         })
         .getCount();
       reqData.type =
         totalTCCount == request.body.test_case_ids.length ? "full" : "partial";

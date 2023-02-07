@@ -1,6 +1,7 @@
 "use strict";
 
-const Business = require('../../Models/Business');
+const Business = use("App/Models/Business");
+const User = use("App/Models/User");
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -17,7 +18,7 @@ class BusinessController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ response, params, auth}) {
+  async index({ response, params, auth }) {
     try {
     } catch (error) {
       throw error;
@@ -31,15 +32,25 @@ class BusinessController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create({ request, response, view }) {
+  async create({ request, response }) {
     try {
-        let reqData = Business._params(request);
-        let business = await Project.create(reqData);0
-        //need to create a admin user from here send business id too
-        //then 
-        response.json(resObj);
+      let reqData = Business._params(request);
+      console.log("reqData", reqData);
+      let email = request.body.email;
+      let password = request.body.password;
+      console.log("email and password", email, password);
+      let business = await Business.create(reqData);
+      console.log("business create", business);
+      let user = await User.create({
+        business_id: business.id,
+        email,
+        password,
+        user_type: "admin",
+      });
+      console.log("business user create", user);
+      response.json({ message: "success" });
     } catch (error) {
-        
+      throw error;
     }
   }
 

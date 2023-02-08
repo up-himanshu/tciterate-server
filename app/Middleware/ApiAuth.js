@@ -6,7 +6,6 @@ const CustomException = use("App/Exceptions/CustomException");
 class ApiAuth {
   async handle({ request, auth }, next) {
     try {
-      console.log("SDFSFSFSDFSDFSDFSDFSDFSFSDFSDF");
       let { email, password } = request.all();
       let requestUrl = request.url();
       if (requestUrl == "/api/v1/users/login" && !!email && !!password) {

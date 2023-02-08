@@ -1,8 +1,9 @@
 "use strict";
 
+const CustomException = use("App/Exceptions/CustomException");
 const Execution = use("App/Models/Execution");
-const TestCase = use("App/Models/TestCase");
 const ExecutionResult = use("App/Models/ExecutionResult");
+const TestCase = use("App/Models/TestCase");
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -21,12 +22,12 @@ class ExecutionController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index({ response, params, auth}) {
+  async index({ response, params, auth }) {
     try {
       let list = await Execution.query()
         .where({
           project_id: params.project_id,
-          business_id: auth.user.business_id
+          business_id: auth.user.business_id,
         })
         .fetch();
       response.json(list);
@@ -51,26 +52,35 @@ class ExecutionController {
       reqData.user_id = auth.user.id;
       reqData.business_id = auth.user.business_id;
       let totalTCCount = await TestCase.query()
-        .where({ 
+        .where({
           project_id: params.project_id,
-          business_id: auth.user.business_id
-         })
+          business_id: auth.user.business_id,
+        })
         .getCount();
       reqData.type =
         totalTCCount == request.body.test_case_ids.length ? "full" : "partial";
       reqData.unexecuted = request.body.test_case_ids.length;
       reqData.total = request.body.test_case_ids.length;
       let resObj = await Execution.create(reqData);
+      try {
+        console.log("1");
+        let eArray = [];
+        request.body.test_case_ids.map((tcId) => {
+          let obj = {};
+          obj.project_id = params.project_id;
+          obj.execution_id = resObj.id;
+          obj.test_case_id = tcId;
+          obj.business_id = auth.user.business_id;
+          eArray.push(obj);
+        });
+        await ExecutionResult.createMany(eArray);
+      } catch (error) {
+        console.log("2");
+        let row = await Execution.findByOrFail("id", resObj.id);
+        await row.delete();
+        throw new CustomException("Error creating execution results", 400);
+      }
       response.status(201).json(resObj);
-      let eArray = [];
-      request.body.test_case_ids.map((tcId) => {
-        let obj = {};
-        obj.project_id = params.project_id;
-        obj.execution_id = resObj.id;
-        obj.test_case_id = tcId;
-        eArray.push(obj);
-      });
-      await ExecutionResult.createMany(eArray);
     } catch (error) {
       throw error;
     }
